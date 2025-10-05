@@ -30,7 +30,9 @@ defmodule Tunez.Music.Artist do
       allow_nil? false
     end
 
-    attribute :biography, :string
+    attribute :biography, :string do
+      allow_nil? true
+    end
 
     create_timestamp :inserted_at
     update_timestamp :updated_at

@@ -1,8 +1,16 @@
 defmodule TunezWeb.Artists.FormLive do
   use TunezWeb, :live_view
 
+  def mount(%{"id" => artist_id}, _session, socket) do
+    artist = Tunez.Music.get_artist_by_id(artist_id)
+    form = Tunez.Music.form_to_update_artist(artist)
+
+    socket = socket |> assign(:form, to_form(form)) |> assign(:page_title, "Update Artist")
+    {:ok, socket}
+  end
+
   def mount(_params, _session, socket) do
-    form = %{}
+    form = Tunez.Music.form_to_create_artist()
 
     socket =
       socket
@@ -37,11 +45,32 @@ defmodule TunezWeb.Artists.FormLive do
     """
   end
 
-  def handle_event("validate", %{"form" => _form_data}, socket) do
+  def handle_event("validate", %{"form" => form_data}, socket) do
+    socket =
+      update(
+        socket,
+        :form,
+        fn form -> AshPhoenix.Form.validate(form, form_data) end
+      )
+
     {:noreply, socket}
   end
 
-  def handle_event("save", %{"form" => _form_data}, socket) do
-    {:noreply, socket}
+  def handle_event("save", %{"form" => form_data}, socket) do
+    case AshPhoenix.Form.submit(socket.assigns.form, params: form_data) do
+      {:ok, artist} ->
+        socket =
+          socket
+          |> put_flash(:info, "Artist created!")
+          |> push_navigate(to: ~p"/artists/#{artist}")
+
+        {:noreply, socket}
+
+      {:error, form} ->
+        socket = socket |> put_flash(:error, "Flick, didn;t work") |> assign(:form, form)
+        {:noreply, socket}
+    end
   end
 end
+
+# http://localhost:4000/artists/8766bd45-dcb2-47e2-8531-3a0e1901f075
