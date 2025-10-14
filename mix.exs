@@ -66,7 +66,8 @@ defmodule Tunez.MixProject do
       {:dns_cluster, "~> 0.2"},
       {:bandit, "~> 1.5"},
       {:igniter, "~> 0.3", only: [:dev]},
-      {:phoenix_test, "~> 0.7.0", only: :test, runtime: false}
+      {:phoenix_test, "~> 0.7.0", only: :test, runtime: false},
+      {:elixir_sense, github: "elixir-lsp/elixir_sense", only: [:dev, :test]}
     ]
   end
 
@@ -81,8 +82,8 @@ defmodule Tunez.MixProject do
       setup: ["deps.get", "ash.setup", "assets.setup", "assets.build", "run priv/repo/seeds.exs"],
       "ecto.setup": ["ecto.create", "ecto.migrate"],
       seed: [
-        "run priv/repo/seeds/01-artists.exs"
-        # "run priv/repo/seeds/02-albums.exs",
+        "run priv/repo/seeds/01-artists.exs",
+        "run priv/repo/seeds/02-albums.exs"
         # "run priv/repo/seeds/08-tracks.exs"
       ],
       "ecto.reset": ["ecto.drop", "ecto.setup"],

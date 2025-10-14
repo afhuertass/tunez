@@ -2,7 +2,7 @@ defmodule TunezWeb.Artists.FormLive do
   use TunezWeb, :live_view
 
   def mount(%{"id" => artist_id}, _session, socket) do
-    artist = Tunez.Music.get_artist_by_id(artist_id)
+    artist = Tunez.Music.get_artist_by_id!(artist_id)
     form = Tunez.Music.form_to_update_artist(artist)
 
     socket = socket |> assign(:form, to_form(form)) |> assign(:page_title, "Update Artist")
@@ -72,5 +72,3 @@ defmodule TunezWeb.Artists.FormLive do
     end
   end
 end
-
-# http://localhost:4000/artists/8766bd45-dcb2-47e2-8531-3a0e1901f075
